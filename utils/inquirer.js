@@ -73,9 +73,77 @@ const leerInput = async(message) => {
     return desc
 }
 
+const listadoTareasBorrar = async(tareas = []) => {
+    const choices = tareas.map((tarea, i) => {
+        const {desc, id} = tarea
+        const indice = `${i+1}.`.red
+
+        return {
+            value: id,
+            name: `${indice} ${desc}`
+        }
+    })
+
+    choices.unshift({
+        value: 0,
+        name: `${'0.'.red} Cancelar`
+    })
+
+    const listadoTareas = [
+        {
+            type: 'list',
+            name: 'id',
+            message: '¿Cuál tarea desea borrar?',
+            choices
+        }
+    ]
+    const {id} = await inquirer.prompt(listadoTareas)
+    return id
+}
+
+const confirmar = async(message) => {
+    const queryConfirmar = [
+        {
+            type: 'confirm',
+            name: 'ok',
+            message
+        }
+    ]
+    const {ok} = await inquirer.prompt(queryConfirmar)
+    return ok
+}
+
+const listadoTareasCompletar = async(tareas = []) => {
+    const choices = tareas.map((tarea, i) => {
+
+        const {desc, id, completadoEn} = tarea
+        const indice = `${i+1}.`.red
+
+        return {
+            value: id,
+            name: `${indice} ${desc}`,
+            checked: Boolean(completadoEn)
+        }
+    })
+
+    const listadoTareas = [
+        {
+            type: 'checkbox',
+            name: 'ids',
+            message: '¿Qué tareas desea marcar como completadas?',
+            choices
+        }
+    ]
+    const {ids} = await inquirer.prompt(listadoTareas)
+    return ids
+
+}
 
 module.exports = {
     inquirerMenu,
     pause,
-    leerInput
+    leerInput,
+    listadoTareasBorrar,
+    listadoTareasCompletar,
+    confirmar
 }
